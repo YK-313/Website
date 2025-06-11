@@ -43,7 +43,7 @@ public class MonochromeController {
             String outputFileName = "processed_" + file.getOriginalFilename();
             Path outputFile = uploadDir.resolve(outputFileName);
 
-            // 【重要】ここにあなたのC++実行可能ファイルのパスを書きます
+           
             String cppExecutablePath = "/Users/yuya/個人プログラム/website/Website/cpp-processor/image_processor"; 
 
             ProcessBuilder processBuilder = new ProcessBuilder(
