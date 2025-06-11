@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>一番くじ期待値計算</title>
+    <link rel="stylesheet" href="/styles.css">
+    <p>
+        <a href="https://1kuji.com/products" target="_blank" rel="noopener noreferrer">
+            一番くじのラインナップを見る（公式サイト）
+        </a>
+    </p>
+    <script>
+        function addTen() {
+            const buyInput = document.querySelector('input[name="buy"]');
+            const current = parseInt(buyInput.value || "0", 10);
+            buyInput.value = current + 10;
+        }
+
+        function addFive() {
+            const buyInput = document.querySelector('input[name="buy"]');
+            const current = parseInt(buyInput.value || "0", 10);
+            buyInput.value = current + 5;
+        }
+
+        function addReset() {
+            const buyInput = document.querySelector('input[name="buy"]');
+            buyInput.value = 0;
+        }
+
+        function updateDecimalPlaces(digits) {
+            const rows = document.querySelectorAll("table tbody tr");
+            rows.forEach(row => {
+                const cell = row.cells[1];
+                const rawValue = parseFloat(cell.getAttribute("data-raw"));
+                if (!isNaN(rawValue)) {
+                    cell.textContent = rawValue.toFixed(digits) + '%';
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>一番くじ期待値計算</h1>
+    <img src="/images/slot.gif" alt="アニメーション" />
+    <form action="/kuzi" method="post">
+        残りくじ総数: <input name="total" type="number" th:value="${total}"><br>
+        あたりの残り枚数: <input name="a" type="number" th:value="${a}"><br>
+        購入数: <input name="buy" type="number" th:value="${buy}"><br>
+        <button type="button" onclick="addFive()">購入数+5</button>
+        <button type="button" onclick="addTen()">購入数+10</button>
+        <button type="button" onclick="addReset()">購入数リセット</button><br>
+        <button type="submit">計算する</button>
+    </form>
+
+    <!-- 結果表示部分 -->
+    <div th:if="${probs != null}">
+        <h2>1枚以上当たる確率：<span th:text="${pA}">0</span>%</h2>
+
+        <p class="compact">残りくじ総数 : <span th:text="${total}">0</span></p>
+        <p class="compact">あたり枚数 : <span th:text="${a}">0</span></p>
+        <p class="compact">購入数 : <span th:text="${buy}">0</span></p>
+
+        <h2>n枚当たる確率</h2>
+
+        <div>
+            小数点以下表示桁数：
+            <button type="button" onclick="updateDecimalPlaces(1)">1桁</button>
+            <button type="button" onclick="updateDecimalPlaces(2)">2桁</button>
+            <button type="button" onclick="updateDecimalPlaces(3)">3桁</button>
+            <button type="button" onclick="updateDecimalPlaces(4)">4桁</button>
+            <button type="button" onclick="updateDecimalPlaces(5)">5桁</button><br>
+            <button type="button" onclick="updateDecimalPlaces(6)">6桁</button>
+            <button type="button" onclick="updateDecimalPlaces(7)">7桁</button>
+            <button type="button" onclick="updateDecimalPlaces(8)">8桁</button>
+            <button type="button" onclick="updateDecimalPlaces(9)">9桁</button>
+            <button type="button" onclick="updateDecimalPlaces(10)">10桁</button>
+        </div>
+
+        <table class="center-table" border="1">
+            <thead>
+                <tr>
+                    <th>当たり枚数 (n)</th>
+                    <th>確率</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="entry : ${probs}">
+                    <td th:text="${entry.key}">n</td>
+                    <td th:attr="data-raw=${entry.value}" th:text="${#numbers.formatDecimal(entry.value, 1, 2) + '%'}">確率</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
