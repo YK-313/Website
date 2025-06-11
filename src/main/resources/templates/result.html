@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>変換結果</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <h1>変換が完了しました！</h1>
+    
+    <div>
+        <img th:src="${processedImagePath}" alt="処理後の画像" style="max-width: 80%; border: 1px solid #ccc;">
+    </div>
+
+    <br>
+    <a href="/Monochrome">別の画像を試す</a><br>
+    <a href="/">ホームに戻る</a>
+</body>
+</html>
