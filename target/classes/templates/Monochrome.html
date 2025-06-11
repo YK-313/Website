@@ -1,2 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>画像モノクロ変換</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <h1>画像モノクロ変換</h1>
+    <p>モノクロに変換したい画像ファイルをアップロードしてください。</p>
+
+    <form method="post" action="/upload" enctype="multipart/form-data">
+        <p>
+            <input type="file" name="imageFile" accept="image/*" />
+        </p>
+        <p>
+            <button type="submit">変換する</button>
+        </p>
+    </form>
+    <br>
+    <a href="/">ホームに戻る</a>
+</body>
+</html>
