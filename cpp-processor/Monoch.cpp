@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
-
+#include <opencv2/opencv.hpp>
 int main(int argc, char* argv[]) {
 
     if (argc != 4) {
@@ -14,17 +14,35 @@ int main(int argc, char* argv[]) {
     std::string outputFile = argv[2];
     std::string command = argv[3];
 
-    std::cout << "C++ Program Started" << std::endl;
-    std::cout << "Input File: " << inputFile << std::endl;
-    std::cout << "Output File: " << outputFile << std::endl;
+    
+    try {
+        // === ここからがOpenCVを使った画像処理です ===
 
-    // ↓↓↓ この行のタイプミスを修正しました！ ↓↓↓
-    std::cout << "Command: " << command << std::endl;
+        // 1. 入力画像を読み込む
+        cv::Mat inputImage = cv::imread(inputFile);
 
-    std::ifstream src(inputFile, std::ios::binary);
-    std::ofstream dst(outputFile, std::ios::binary);
-    dst << src.rdbuf();
+        // 読み込みに失敗したかチェック
+        if (inputImage.empty()) {
+            std::cerr << "Error: Could not open or find the image." << std::endl;
+            return 1;
+        }
 
-    std::cout << "C++ Program Finished Successfully" << std::endl;
+       
+        cv::Mat grayImage;
+
+        
+        cv::cvtColor(inputImage, grayImage, cv::COLOR_BGR2GRAY);
+
+        
+        cv::imwrite(outputFile, grayImage);
+
+    } catch (const cv::Exception& e) {
+        // OpenCV関連でエラーが起きた場合
+        std::cerr << "OpenCV Error: " << e.what() << std::endl;
+        return 1;
+    }
+
+    std::cout << "Image processed successfully with OpenCV." << std::endl;
+    // 正常終了
     return 0;
 }
