@@ -44,7 +44,7 @@
     <img src="/images/slot.gif" alt="アニメーション" />
     <form action="/kuzi" method="post">
         残りくじ総数: <input name="total" type="number" th:value="${total}"><br>
-        あたりの残り枚数: <input name="a" type="number" th:value="${a}"><br>
+        あたりの残り枚数: <input name="atari" type="number" th:value="${atari}"><br>
         購入数: <input name="buy" type="number" th:value="${buy}"><br>
         <button type="button" onclick="addFive()">購入数+5</button>
         <button type="button" onclick="addTen()">購入数+10</button>
@@ -57,7 +57,7 @@
         <h2>1枚以上当たる確率：<span th:text="${pA}">0</span>%</h2>
 
         <p class="compact">残りくじ総数 : <span th:text="${total}">0</span></p>
-        <p class="compact">あたり枚数 : <span th:text="${a}">0</span></p>
+        <p class="compact">あたり枚数 : <span th:text="${atari}">0</span></p>
         <p class="compact">購入数 : <span th:text="${buy}">0</span></p>
 
         <h2>n枚当たる確率</h2>
