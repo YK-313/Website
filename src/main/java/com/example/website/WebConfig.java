@@ -1,4 +1,4 @@
-package com.example.counter; 
+package com.example.website;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
