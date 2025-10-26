@@ -1,0 +1,4 @@
+com\example\website\WebConfig.class
+com\example\website\KuziController.class
+com\example\website\MonochromeController.class
+com\example\website\WebsiteApplication.class
