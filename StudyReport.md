@@ -26,4 +26,18 @@ Springは、Java EE（エンタープライズ版Java）開発の複雑さを解
     引き算　a.subtract(b)
     掛け算　a.multiply(b)
     割り算　a.divide(b)
+・AWSを使用するにあたって
+1. アプリケーションのパッケージングAWSにデプロイするために、まずSpring Bootアプリケーションを実行可能なJARファイルとしてビルドします。./mvnw package
+2. AWSサービスの選択
+    A. Elastic Beanstalk
+    Elastic Beanstalk は、JARファイルをアップロードするだけで、AWSがインフラ（EC2インスタンス、ロードバランサー、スケーリング設定など）を自動で構築・管理してくれるサービス。サーバー構築の手間がほぼ不要で、デプロイが非常に簡単。
+    1. Elastic Beanstalkで新しい環境を作成する。
+    2. 作成したJARファイルをアップロードする。 
+    3. AWSが自動でデプロイを実行し、URLが発行される。
 
+    B. EC2 (自由度が高いが、手間がかかる)EC2 (Elastic Compute Cloud) は、仮想サーバーを自分でレンタルするサービス。OS、Javaバージョン、セキュリティ設定など、すべてを自由に制御できる。
+    1. EC2インスタンスを作成し、起動する。 
+    2. Java実行環境（JRE/JDK）をインストールする。
+    3. JARファイルをEC2インスタンスに転送する。 
+    4. java -jar your-app.jar コマンドでアプリケーションを起動する。
+まずElastic Beanstalkを使用してみることに
