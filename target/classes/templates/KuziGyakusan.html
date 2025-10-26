@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">  
+<head>
+    <meta charset="UTF-8">
+    
+    <title>一番くじ期待値計算</title> 
+    
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <h1>購入枚数ごとの期待値</h1>
+    <p>
+        <a href="https://1kuji.com/products" target="_blank" rel="noopener noreferrer">
+            一番くじのラインナップを見る（公式サイト）
+        </a><br><br>
+        <a href="/kuzi"> 購入枚数から期待値を計算したい方はこちら</a>
+    </p>
+    
+    <img src="/images/slot.gif" alt="アニメーション" />
+    
+    <form action="/KuziGyakusan" method="post">
+        残りくじ総数: <input name="total" type="number" th:value="${total}"><br>
+        当たり枚数: <input name="atari" type="number" th:value="${atari}"><br>
+        <button type="submit">計算する</button>
+    </form>
+    
+    <div th:if="${error}" style="color: red; margin-bottom: 10px;">
+        <p th:text="${error}"></p>
+    </div>
+
+    <div th:if="${probs != null}">
+        <h2>各購入数における期待値</h2>
+        <table class="center-table" border="1">
+            <thead>
+            <tr>
+            <th>購入数</th>
+            <th>あたりが一つ以上出る確率</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="k : ${#lists.sort(probs.keySet())}">
+                <td th:text="${k}">1</td>    
+                <td th:text="${#numbers.formatPercent(probs.get(k), 0, 2)}">50.00%</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
