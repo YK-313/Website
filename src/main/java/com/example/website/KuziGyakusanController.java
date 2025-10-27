@@ -14,19 +14,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class KuziGyakusanController {
     private static final int SCALE = 20; // BigDecimalの計算精度を指定
-    private static final RoundingMode ROUND = RoundingMode.HALF_UP; // BigDecimalの丸めモードを指定
+    private static final RoundingMode ROUND = RoundingMode.DOWN; // BigDecimalの丸めモードを指定
 
     @GetMapping("/KuziGyakusan")
-    public String showKujiForm() {
+    public String showKujiForm(Model model) {
+        model.addAttribute("Digits", 4); // 初期表示時に小数点以下4桁を設定
         return "KuziGyakusan"; // /kuziへのgetリクエストがあった際に、（kuzi.html）を表示
     }
     @PostMapping("/KuziGyakusan") ///POSTリクエストがあった場合にフォームからのデータを受け取り、確率計算を行う。
     public String calcResult(@RequestParam int total,
                          @RequestParam int atari,
+                         @RequestParam int Digits,
                          Model model) {
         //エラーがあっても入力値を保持するためにモデルに追加
         model.addAttribute("total", total);
         model.addAttribute("atari", atari);
+        model.addAttribute("Digits", Digits);
         // 入力検証
         if (total <= 0) {
             model.addAttribute("error", "「残りくじ総数」は1以上でなければなりません。");
@@ -36,9 +39,10 @@ public class KuziGyakusanController {
             model.addAttribute("error", "「当たり枚数」は「残りくじ総数」以下である必要があります。");
             return "KuziGyakusan";
         }
-        Map<Integer, BigDecimal> probs = new HashMap<>();
+        Map<Integer, BigDecimal> Probs = new HashMap<>();
+        Map<String, BigDecimal> keyProbs = new HashMap<>();
         int k = 0; // 購入数（試行回数）
-        BigDecimal prob = BigDecimal.ZERO; // 当たりを引く確率
+        BigDecimal Prob = BigDecimal.ZERO; // 当たりを引く確率
          try {
             while (k < total) {
             k++;
@@ -46,15 +50,11 @@ public class KuziGyakusanController {
             BigDecimal combTotalBD = new BigDecimal(combTotal);
             BigInteger combFailBI =  KuziController.combination(total - atari, k); //k回引いて全てハズレの組み合わせ数
             BigDecimal combFailBD = new BigDecimal(combFailBI);
-            prob = BigDecimal.ONE.subtract(combFailBD.divide(combTotalBD, SCALE, ROUND)); //あたりを引く確率
-            probs.put(k, prob.stripTrailingZeros());
-            System.out.println("--- probs Map の中身 ---");
-            probs.forEach((key, value) -> {
-            // 購入数 (key) と確率 (value) を出力
-            System.out.println("k=" + key + ", prob=" + value.toPlainString());
-            });
+            Prob = BigDecimal.ONE.subtract(combFailBD.divide(combTotalBD, SCALE, ROUND)).multiply(new BigDecimal(100)); //あたりを引く確率
+            BigDecimal ProbDown = Prob.setScale(Digits, RoundingMode.DOWN);
+            Probs.put(k, ProbDown.stripTrailingZeros());
         }
-            model.addAttribute("probs", probs);
+            model.addAttribute("Probs", Probs);
             return "KuziGyakusan";
         } catch (Exception ex) {
             model.addAttribute("error", "予期せぬエラーが発生しました。");

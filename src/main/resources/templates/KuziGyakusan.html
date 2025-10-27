@@ -21,6 +21,7 @@
     <form action="/KuziGyakusan" method="post">
         残りくじ総数: <input name="total" type="number" th:value="${total}"><br>
         当たり枚数: <input name="atari" type="number" th:value="${atari}"><br>
+        小数点以下の計算桁数: <input name="Digits" type="number" th:value="${Digits}"><br>
         <button type="submit">計算する</button>
     </form>
     
@@ -28,7 +29,7 @@
         <p th:text="${error}"></p>
     </div>
 
-    <div th:if="${probs != null}">
+    <div th:if="${Probs != null}">
         <h2>各購入数における期待値</h2>
         <table class="center-table" border="1">
             <thead>
@@ -38,9 +39,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="k : ${#lists.sort(probs.keySet())}">
-                <td th:text="${k}">1</td>    
-                <td th:text="${#numbers.formatPercent(probs.get(k), 0, 2)}">50.00%</td>
+            <tr th:each="entry : ${Probs}">
+                    <td th:text="${entry.key}">n</td>
+                    <td th:attr="data-raw=${entry.value}" th:text="${#numbers.formatDecimal(entry.value, 1, Digits) + '%'}">確率</td>
             </tr>
             </tbody>
         </table>
