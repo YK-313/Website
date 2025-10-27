@@ -29,8 +29,8 @@
         <p th:text="${error}"></p>
     </div>
 
-    <div th:if="${Probs != null}">
-        <h2>各購入数における期待値</h2>
+    <div th:if="${KeyProbs != null}">
+        <h2>主要な期待値</h2>
         <table class="center-table" border="1">
             <thead>
             <tr>
@@ -39,12 +39,33 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="entry : ${Probs}">
-                    <td th:text="${entry.key}">n</td>
+            <tr th:each="entry : ${KeyProbs}">
+                    <td th:text="${entry.key + '枚'}">n</td>
                     <td th:attr="data-raw=${entry.value}" th:text="${#numbers.formatDecimal(entry.value, 1, Digits) + '%'}">確率</td>
             </tr>
             </tbody>
         </table>
+        <details>
+        <summary style="cursor: pointer; font-weight: bold; padding: 5px;">
+            各購入数における詳細な確率を表示
+        </summary>
+        <p>
+            <table class="center-table" border="1">
+                <thead>
+                <tr>
+                <th>購入数</th>
+                <th>あたりが一つ以上出る確率</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="entry : ${Probs}">
+                    <td th:text="${entry.key + '枚'}">n</td>
+                    <td th:attr="data-raw=${entry.value}" th:text="${#numbers.formatDecimal(entry.value, 1, Digits) + '%'}">確率</td>
+                </tr>
+                </tbody>
+            </table>
+        </p>
+        </details>
     </div>
 </body>
 </html>

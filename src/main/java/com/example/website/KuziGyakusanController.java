@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -40,9 +41,10 @@ public class KuziGyakusanController {
             return "KuziGyakusan";
         }
         Map<Integer, BigDecimal> Probs = new HashMap<>();
-        Map<String, BigDecimal> keyProbs = new HashMap<>();
+        Map<Integer, BigDecimal> KeyProbs = new LinkedHashMap<>();
         int k = 0; // 購入数（試行回数）
         BigDecimal Prob = BigDecimal.ZERO; // 当たりを引く確率
+        int threshold = 10;
          try {
             while (k < total) {
             k++;
@@ -53,7 +55,13 @@ public class KuziGyakusanController {
             Prob = BigDecimal.ONE.subtract(combFailBD.divide(combTotalBD, SCALE, ROUND)).multiply(new BigDecimal(100)); //あたりを引く確率
             BigDecimal ProbDown = Prob.setScale(Digits, RoundingMode.DOWN);
             Probs.put(k, ProbDown.stripTrailingZeros());
-        }
+
+                if (ProbDown.compareTo(new BigDecimal(threshold)) >= 0) {// キリ番ごとの、kとProbDownをkeyProbsに保存
+                KeyProbs.put(k, ProbDown.stripTrailingZeros());
+                threshold += 10;
+                }
+            }
+            model.addAttribute("KeyProbs", KeyProbs);
             model.addAttribute("Probs", Probs);
             return "KuziGyakusan";
         } catch (Exception ex) {
