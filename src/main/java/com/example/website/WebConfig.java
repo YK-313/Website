@@ -1,5 +1,6 @@
 package com.example.website;
 
+import org.springframework.lang.NonNull;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -8,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
         // "/uploads/**" というURLへのリクエストが来た時に、
         // "file:uploads/" というプロジェクトルート直下の物理的なフォルダを探しに行くよう設定します。
         registry.addResourceHandler("/uploads/**")
